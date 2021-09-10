@@ -15,8 +15,8 @@ def calculate_rg(repeats,directory):
         frametraj.append(j)
         d = md.compute_rg(r)
         meantraj.append(st.mean(d))
-        mean,sd,frame=mean_feng(meantraj,frametraj)
-        return (mean,sd,frame)
+    mean,sd,frame=mean_feng(meantraj,frametraj)
+    return (mean,sd,frame)
 
 def mean_feng(value,count,repeats):
     framesum=0

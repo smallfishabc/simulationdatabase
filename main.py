@@ -5,6 +5,7 @@
 
 import pandas as pd
 import database
+import Helical_sliding_window as Hs
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
@@ -14,6 +15,10 @@ def print_hi(name):
 if __name__ == '__main__':
     print_hi('PyCharm')
     df=pd.read_csv('database_entry.csv')
+    test=Hs.helicity_calculation(5,'F:\DATA_F\PDBsumreal\DP00007-summary\BB\S_0')
+
+
+def load_data(df):
     df_rg=database.add_data('rg',df)
     df_ee=database.add_data('ee',df)
     fulldata=pd.concat([df_ee,df_rg])
@@ -24,13 +29,6 @@ if __name__ == '__main__':
     eedata.insert(eedata.shape[1],'ratio','Nan')
     rgdata=bufferdata[bufferdata['datatype']=='rg'].reset_index()
     rgdata.to_csv('rgdata.csv')
-    # for index,data in eedata.iterrows():
-    #     protein_name=data['Protein']
-    #     ee=data['Rs']
-    #     rg=rgdata[rgdata['Protein']==protein_name]['Rs']
-    #     ratio=ee/rg
-    #     eedata[eedata['Protein']==protein_name]['ratio']=ratio
-
     for i in range(len(eedata)):
         protein_name=eedata.loc[i,'Protein']
         print(protein_name)
@@ -42,5 +40,4 @@ if __name__ == '__main__':
         eedata.loc[i,'ratio']=ratio
     eedata.to_csv('eedata.csv')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
