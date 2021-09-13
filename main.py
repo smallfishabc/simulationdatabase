@@ -2,8 +2,11 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import os
 
 import pandas as pd
+
+import Generatedatabase
 import database
 import Helical_sliding_window as Hs
 def print_hi(name):
@@ -14,8 +17,16 @@ def print_hi(name):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
+    directory='F:\globus\simulation_contactmap_validation'
+    Generatedatabase.generate_database(directory)
     df=pd.read_csv('database_entry.csv')
-    test=Hs.helicity_calculation(5,'F:\DATA_F\PDBsumreal\DP00007-summary\BB\S_0')
+    # for index, row in df.iterrows():
+    #     target=row
+        #target=df[df['Protein']=='puma_wildfull']
+        # Hs.generate_helicit_csv(target)
+
+
+
 
 
 def load_data(df):
