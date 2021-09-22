@@ -11,8 +11,9 @@ import os
 import re
 import mdtraj as md
 import statistics as st
+import pysnooper
 
-
+#@pysnooper.snoop()
 def searchfile(root, filename):
     print(root, filename)
     for path, dirs, files in os.walk(root):
@@ -87,6 +88,3 @@ class psssvalue:
                 if '.xtc' in i:
                     repeatnumber += 1
         return (repeatnumber)
-# string=str(os.getcwd())
-# q=protein('DP00007',string)
-# print(q.path)

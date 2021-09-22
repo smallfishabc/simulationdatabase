@@ -19,7 +19,7 @@ def listsubdirectory(listname, targetdir):
     namestemp = os.listdir()
     for n in namestemp:
         if (".csv" in n) or (".py" in n) or (".dat" in n) or (".xlsx" in n) or (".json" in n) or (".png" in n) or (
-                ".jpg" in n) or ("pycache" in n) or (".svg" in n):
+                ".jpg" in n) or ("pycache" in n) or (".svg" in n) or (".txt" in n):
             pass
         else:
             listname.append(n)

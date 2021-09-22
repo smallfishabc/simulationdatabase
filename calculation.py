@@ -49,4 +49,24 @@ def calculation_structure(protein,function):
             sd.append(sdvalue)
             frame.append(framevalue)
     return()
+# Here, we will add a function to automatically run the existing scripts under the certain folder.
+def run_exist_scripts(datatype,entry_directory):
+    os.chdir(entry_directory)
+    if datatype is 'abc' :
+        pass
+    elif 1:
+        pass
+    elif 1:
+        pass
+    elif 1:
+        pass
+    return()
 
+def chi_calculation():
+    return
+
+def std_calculation():
+    return
+
+def temp_calculation():
+    return
