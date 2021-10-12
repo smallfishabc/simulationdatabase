@@ -2,6 +2,7 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import os
 
 import pandas as pd
 import correlationplot
@@ -21,6 +22,9 @@ if __name__ == '__main__':
     Generatedatabase.generate_database(directory)
     df = pd.read_csv('database_entry.csv')
     test = database.load_data(df)
+    os.chdir(directory)
+    print('a')
+    test.to_csv('database_full_value_test2.csv',index=False)
 #    operation = database.operation(df)
 #    correlationplot.custom_plot(df)
 
