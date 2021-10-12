@@ -19,7 +19,7 @@ def listsubdirectory(listname, targetdir):
     namestemp = os.listdir()
     for n in namestemp:
         if (".csv" in n) or (".py" in n) or (".dat" in n) or (".xlsx" in n) or (".json" in n) or (".png" in n) or (
-                ".jpg" in n) or ("pycache" in n) or (".svg" in n) or (".txt" in n):
+                ".jpg" in n) or ("pycache" in n) or (".svg" in n) or (".txt" in n) or (".pdf" in n) or (".fasta" in n):
             pass
         else:
             listname.append(n)
@@ -38,6 +38,7 @@ def generate_database(string):
     disprotname = set(disprotname)
     objectlist = []
     for h in disprotname:
+        print(h)
         q = proteinlistlibrary.protein(h, string)
         objectlist.append(q)
     df = pd.DataFrame(columns=['Protein', 'Directory', 'Sequence', 'Resitype', 'Psivalue', 'Repeats'])
@@ -49,3 +50,21 @@ def generate_database(string):
         df = df.append(row_to_add, ignore_index=True)
     os.chdir(string)
     df.to_csv('database_entry.csv', index=False)
+    return(objectlist)
+# This function only generate a object list without generating a dataframe.
+def generate_database_standalone(string):
+    print(string)
+    names = []
+    # string=str(os.getcwd())
+    # string='F:\DATA_F\puma_scramble_new\puma123'
+    listsubdirectory(names, string)
+    disprotname = []
+    for h in names:
+        disprotname.append(h.split("-")[0])  ##payattention no - in folders names
+    disprotname = set(disprotname)
+    objectlist = []
+    for h in disprotname:
+        print(h)
+        q = proteinlistlibrary.protein(h, string)
+        objectlist.append(q)
+    return(objectlist)
