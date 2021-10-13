@@ -19,6 +19,8 @@ def print_hi(name):
 if __name__ == '__main__':
     print_hi('PyCharm')
     directory = 'F:\DATA_F\PDBsum'
+    linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum'
+    directory=linux_directory
     Generatedatabase.generate_database(directory)
     df = pd.read_csv('database_entry.csv')
     test = database.load_data(df)
