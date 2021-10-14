@@ -41,7 +41,7 @@ def search(root, filename):
                 # Return the full path of the file and jump out of the loop
                 fullpath = os.path.join(path, dirname)
                 break
-    return (fullpath)
+    return fullpath
 
 
 # Define a class to store the directory information of the protein

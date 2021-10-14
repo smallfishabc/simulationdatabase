@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
 
+# Potential script for plotting the correlation plot. May be removed in next update
+
 # matplotlib.rcParams['svg.fonttype'] = 'none'
 # proteinlist=['E1A','Ash1','p53','puma_wild']
 # data = pd.read_csv('tryyourbest.csv')

@@ -3,6 +3,10 @@ import os
 import statistics as st
 import numpy as np
 
+# This script is trying to integrate my existing stand alone analysis scripts.
+# These stand alone scripts are written in procedural programming.
+
+# Calculate the Radius of Gyration of the trajectory
 def calculate_rg(repeats,directory):
     os.chdir(directory)
     frametraj=[]
@@ -18,6 +22,8 @@ def calculate_rg(repeats,directory):
     mean,sd,frame=mean_feng(meantraj,frametraj)
     return (mean,sd,frame)
 
+# Different repeats may have different number of frames. We create a algorithm to calculated the average based on its
+# frame number
 def mean_feng(value,count,repeats):
     framesum=0
     meanadj=0
@@ -31,6 +37,7 @@ def mean_feng(value,count,repeats):
     sd=np.sqrt((stdadj / framesum) * repeats / (repeats-1))
     return (meanref,sd,framesum)
 
+# Calculation template for these stand alone functions.
 def calculation_structure(protein,function):
     string=protein.path
     os.chdir(string)

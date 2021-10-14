@@ -4,6 +4,5 @@ import database
 import Generatedatabase
 import Helical_sliding_window
 import main
-import path
 import operation
 import proteinlistlibrary

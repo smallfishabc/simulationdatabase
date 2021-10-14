@@ -1,7 +1,4 @@
-# This is a sample Python script.
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import os
 
 import pandas as pd
@@ -9,24 +6,25 @@ import correlationplot
 import Generatedatabase
 import database
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
+# If we run this script
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    # Set the target directory
     directory = 'F:\DATA_F\PDBsum'
+    # Special directory setting for linux system
     linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum'
     directory=linux_directory
+    # Print out the directory for testing
+    print(directory)
+    # Generate a protein entry database containing the subdirectory for each protein
     Generatedatabase.generate_database(directory)
+    # Load the entry dataframe
     df = pd.read_csv('database_entry.csv')
+    # Load data into the full protein dataframe
     test = database.load_data(df)
+    # Go back to the target directory for saving the csv file
     os.chdir(directory)
+    # Print for test
     print('a')
-    test.to_csv('database_full_value_test2.csv',index=False)
-#    operation = database.operation(df)
-#    correlationplot.custom_plot(df)
+    # Save the csv file
+    test.to_csv('database_full_value_test1.csv',index=False)
 

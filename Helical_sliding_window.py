@@ -7,6 +7,8 @@ import matplotlib.pylab as plt
 import calculation
 import pandas as pd
 
+# Sliding window script for future data analysis. May be removed in next update
+
 def helicity_calculation(repeats, directory):
     os.chdir(directory)
     test=os.getcwd()
