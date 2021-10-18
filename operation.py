@@ -1,5 +1,7 @@
-import pandas as pd
+import os
 
+import pandas as pd
+import datacleaning
 import database
 import Generatedatabase
 # Here, we will define several database operation that are frequently used in my previous scripts.
@@ -59,7 +61,7 @@ def database_plot_pre(datatype,MTFE=0):
     for i in range(len(df_entry)):
         protein_name = df_entry.loc[i, 'Protein']
         sequence = df_entry.loc[i, 'Sequence']
-        valueraw1=multiple_selection_function(df,protein_name,datatype,MTFE)['att1'].tolist()[0]
+        valueraw1 = multiple_selection_function(df,protein_name,datatype,MTFE)['att1'].tolist()[0]
         valueraw2 = multiple_selection_function(df, protein_name, datatype, MTFE)['att2'].tolist()[0]
         valueraw3 = multiple_selection_function(df, protein_name, datatype, MTFE)['rep1'].tolist()[0]
         valueraw4 = multiple_selection_function(df, protein_name, datatype, MTFE)['rep2'].tolist()[0]
@@ -77,3 +79,49 @@ def database_plot_pre(datatype,MTFE=0):
         new_data=pd.DataFrame(dict_pd,index=[0])
         full_df = pd.concat([full_df, new_data], ignore_index=True)
     return full_df
+# Designed for calculating several value in on function
+def database_plot_pre_multiple(datatype,MTFE=0):
+    #os.chdir('/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum')
+    df_entry = pd.read_csv('database_entry.csv')
+    df = pd.read_csv('database_full_value_1017_cutoff_5_far.csv')
+    full_df= pd.DataFrame()
+    for i in range(len(df_entry)):
+        protein_name = df_entry.loc[i, 'Protein']
+        sequence = df_entry.loc[i, 'Sequence']
+        # Covert list from csv to python list
+        valueraw1_raw = multiple_selection_function(df,protein_name,datatype,MTFE)['att1'].tolist()[0]
+        valueraw1_list=datacleaning.covert_string_tolist(valueraw1_raw)
+        valueraw2_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['att2'].tolist()[0]
+        valueraw2_list = datacleaning.covert_string_tolist(valueraw2_raw)
+        valueraw3_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['rep1'].tolist()[0]
+        valueraw3_list = datacleaning.covert_string_tolist(valueraw3_raw)
+        valueraw3_list = datacleaning.absolute_value(valueraw3_list)
+        valueraw4_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['rep2'].tolist()[0]
+        valueraw4_list = datacleaning.covert_string_tolist(valueraw4_raw)
+        valueraw4_list = datacleaning.absolute_value(valueraw4_list)
+        # Record the datatype of each value using typelist
+        typelist=['none_none','none_ratio','none_probability','dis_none','dis_ratio','dis_probability','rtdis_none','rtdis_ration','rtdis_probability']
+        # Select data from the list
+        index=0
+        type=typelist[index]
+        valueraw1 = valueraw1_list[index]
+        valueraw2 = valueraw2_list[index]
+        valueraw3 = valueraw3_list[index]
+        valueraw4 = valueraw4_list[index]
+        # value = (valueraw1 +  valueraw2 + valueraw3 + valueraw4)
+        # value = (valueraw1 + valueraw2 - valueraw3 - valueraw4)
+        value = (valueraw1+valueraw2)
+        value2 = (valueraw4)
+        # print(value)
+        chi_0=chi_value_calculation(df,protein_name, 0,sequence)
+        att_sensitivity=attractive_sensitivity_calculation(df,protein_name,sequence,chi_0)
+        rep_sensitivity=repulsive_sensitivity_calculation(df, protein_name, sequence, chi_0)
+        heli=multiple_selection_function(df, protein_name, 'helix', 0)['Rs'].tolist()[0]
+        print(heli)
+        dict_pd={'Protein': protein_name,type+'att':value,type+'rep':value2,'chi_0':chi_0,'att_sensitivity':att_sensitivity,'rep_sensitivity':rep_sensitivity,'Helicity':heli}
+        new_data=pd.DataFrame(dict_pd,index=[0])
+        full_df = pd.concat([full_df, new_data], ignore_index=True)
+        full_df.to_csv('interaction_strength_fitting_1014.csv',index=False)
+    return full_df
+if __name__ == '__main__':
+    database_plot_pre_multiple('interaction', MTFE=0)

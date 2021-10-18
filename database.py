@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import pysnooper
-
+import Sequence_Cider as Sc
 # Load separate datafiles into a entire database
 def load_data(df):
     # Add selected data to the dataframe
@@ -15,7 +15,7 @@ def load_data(df):
     # Add Helicity
     df_helix = add_data('BB_Heli_5en.csv', df, 'helix')
     # Add interaction strength
-    df_interaction = add_data('BBcontact_new_test1.csv', df, 'interaction')
+    df_interaction = add_data('BBcontact_list_cutoff_far.csv', df, 'interaction')
     # Add sequence features
     df_feature = add_data_sequence_feature(df)
     #df_interaction = add_data('BB_contact_lines.csv',df,'interaction')
@@ -24,7 +24,28 @@ def load_data(df):
     # Save the final data to a csv file
     # fulldata.to_csv('fulldata.csv', index=False)
     return fulldata
-
+# Easy version (Designed for new analysis output)
+def load_data_easy(df):
+    # Add selected data to the dataframe
+    # Add Radius of Gyration
+    df_rg = add_data('BBrawRG_easy.csv', df, 'rg')
+    # Add End to End distance
+    df_ee = add_data('BBEERG_easy.csv', df, 'ee')
+    # Add average hydrogen bonds number.(The format of HB file is slightly different from other data. This will
+    # be fixed in future update)
+    df_HB = add_data_HB('BB_HB_easy.csv', df, 'HB')
+    # Add Helicity
+    df_helix = add_data('BB_Heli_easy.csv', df, 'helix')
+    # Add interaction strength
+    #df_interaction = add_data('BBcontact_list.csv', df, 'interaction')
+    # Add sequence features
+    df_feature = add_data_sequence_feature(df)
+    #df_interaction = add_data('BB_contact_lines.csv',df,'interaction')
+    # Merge the data to a single dataframe
+    fulldata = pd.concat([df_ee, df_rg, df_HB, df_helix,df_feature])
+    # Save the final data to a csv file
+    # fulldata.to_csv('fulldata.csv', index=False)
+    return fulldata
 
 # Add data function
 def add_data(filename, entrydf, data_type):
@@ -76,11 +97,14 @@ def add_data_sequence_feature(entrydf, data_type='feature'):
         length=len(sequence)
         print(sequence,length)
         #Will calculate specific sequence feature
-        #cider_calculation()
+        dict_feature=Sc.Cider_calculation(sequence)
+        pd_feature=pd.DataFrame(dict_feature,index=[0])
         #Feng_calculation()
         # Create a new dataframe fo the sequence feature
         new_data=pd.DataFrame({'Protein':protein_name,'datatype':data_type,'Sequence':sequence,'length':length},index=[0])
-
+        new_data=pd.concat([new_data,pd_feature],axis=1)
+        # Insert a dictionary containing all cider data
+        #new_data.insert(3)
         #new_data.insert(0, 'datatype', data_type)
         #new_data.insert(0, 'Protein', protein_name)
         # Add these data to the 'full' dataframe
@@ -92,5 +116,3 @@ def read_data(directory, filename):
     filepath = os.path.join(directory, filename)
     data = pd.read_csv(filepath)
     return (data)
-
-
