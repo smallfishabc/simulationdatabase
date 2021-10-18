@@ -100,9 +100,9 @@ def database_plot_pre_multiple(datatype,MTFE=0):
         valueraw4_list = datacleaning.covert_string_tolist(valueraw4_raw)
         valueraw4_list = datacleaning.absolute_value(valueraw4_list)
         # Record the datatype of each value using typelist
-        typelist=['none_none','none_ratio','none_probability','dis_none','dis_ratio','dis_probability','rtdis_none','rtdis_ration','rtdis_probability']
+        typelist=['none_none','none_ratio','none_probability','dis_none','dis_ratio','dis_probability','rtdis_none','rtdis_ratio','rtdis_probability']
         # Select data from the list
-        index=0
+        index=7
         type=typelist[index]
         valueraw1 = valueraw1_list[index]
         valueraw2 = valueraw2_list[index]
