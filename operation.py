@@ -80,10 +80,10 @@ def database_plot_pre(datatype,MTFE=0):
         full_df = pd.concat([full_df, new_data], ignore_index=True)
     return full_df
 # Designed for calculating several value in on function
-def database_plot_pre_multiple(datatype,MTFE=0):
+def database_plot_pre_multiple(datatype,MTFE=0,index=0):
     #os.chdir('/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum')
     df_entry = pd.read_csv('database_entry.csv')
-    df = pd.read_csv('database_full_value_1017_cutoff_5_far.csv')
+    df = pd.read_csv('database_full_value_1017_cutoff_5_far_standard_value.csv')
     full_df= pd.DataFrame()
     for i in range(len(df_entry)):
         protein_name = df_entry.loc[i, 'Protein']
@@ -102,7 +102,6 @@ def database_plot_pre_multiple(datatype,MTFE=0):
         # Record the datatype of each value using typelist
         typelist=['none_none','none_ratio','none_probability','dis_none','dis_ratio','dis_probability','rtdis_none','rtdis_ratio','rtdis_probability']
         # Select data from the list
-        index=7
         type=typelist[index]
         valueraw1 = valueraw1_list[index]
         valueraw2 = valueraw2_list[index]
@@ -123,5 +122,11 @@ def database_plot_pre_multiple(datatype,MTFE=0):
         full_df = pd.concat([full_df, new_data], ignore_index=True)
         full_df.to_csv('interaction_strength_fitting_1014.csv',index=False)
     return full_df
+def plot_pre_list(datatype):
+    list_data=[]
+    for i in range(9):
+        j=database_plot_pre_multiple(datatype,MTFE=0,index=i)
+        list_data.append(j)
+    return list_data
 if __name__ == '__main__':
     database_plot_pre_multiple('interaction', MTFE=0)

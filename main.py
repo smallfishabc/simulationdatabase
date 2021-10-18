@@ -27,5 +27,5 @@ if __name__ == '__main__':
     # Print for test
     print('a')
     # Save the csv file
-    test.to_csv('database_full_value_1017_cutoff_5_far.csv',index=False)
+    test.to_csv('database_full_value_1017_cutoff_5_far_standard_value.csv',index=False)
 
