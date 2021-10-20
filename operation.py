@@ -78,8 +78,8 @@ def database_plot_pre(datatype,MTFE=0):
         full_df = pd.concat([full_df, new_data], ignore_index=True)
     return full_df
 # Designed for calculating several value in on function
-def database_plot_pre_multiple(datatype,MTFE=0,index=0):
-    #os.chdir('/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum')
+def database_plot_pre_multiple(datatype,MTFE=0,index=8):
+    os.chdir('/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum')
     df_entry = pd.read_csv('database_entry.csv')
     df = pd.read_csv('database_full_value_1017_cutoff_5_far_standard_value.csv')
     full_df= pd.DataFrame()
@@ -112,6 +112,7 @@ def database_plot_pre_multiple(datatype,MTFE=0,index=0):
         value = (valueraw1+valueraw2)
         value2 = (valueraw3+valueraw4)
         # print(value)
+        interaction_data=interaction_pre_list(index, typelist, valueraw1_list, valueraw2_list, valueraw3_list, valueraw4_list)
         chi_0=chi_value_calculation(df,protein_name, 0,sequence)
         att_sensitivity=attractive_sensitivity_calculation(df,protein_name,sequence,chi_0)
         rep_sensitivity=repulsive_sensitivity_calculation(df, protein_name, sequence, chi_0)
@@ -119,9 +120,12 @@ def database_plot_pre_multiple(datatype,MTFE=0,index=0):
         HB = multiple_selection_function(df, protein_name, 'HB', 0)['Rs'].tolist()[0]
         # Calculate Kappa value
         delta = select_datatype_data(df_protein, 'feature', MTFE=0)['delta']
-        dict_pd={'Protein': protein_name,type+'att':value,type+'rep':value2,'chi_0':chi_0,'att_sensitivity':att_sensitivity,
-                 'rep_sensitivity':rep_sensitivity,'Helicity':heli,'H-bonds':HB,'delta':delta}
-        new_data=pd.DataFrame(dict_pd,index=[0])
+        #dict_pd={'Protein': protein_name,type+'att':value,type+'rep':value2,'chi_0':chi_0,'att_sensitivity':att_sensitivity,
+        #       'rep_sensitivity':rep_sensitivity,'Helicity':heli,'H-bonds':HB,'delta':delta}
+        dict_pd={'Protein': protein_name,'chi_0':chi_0,'att_sensitivity':att_sensitivity,
+               'rep_sensitivity':rep_sensitivity,'Helicity':heli,'H-bonds':HB,'delta':delta}
+        new_data = pd.DataFrame(dict_pd,index=[0])
+        new_data = pd.concat([new_data,interaction_data],axis=1)
         full_df = pd.concat([full_df, new_data], ignore_index=True)
         full_df.to_csv('interaction_strength_fitting_1014.csv',index=False)
     return full_df
@@ -131,5 +135,22 @@ def plot_pre_list(datatype):
         j=database_plot_pre_multiple(datatype,MTFE=0,index=i)
         list_data.append(j)
     return list_data
+def interaction_pre_list(index,typelist,valueraw1_list,valueraw2_list,valueraw3_list,valueraw4_list):
+    full_data=pd.DataFrame({'a':1},index=[0])
+    for i in range(index):
+        valueraw1=valueraw1_list[i]
+        valueraw2=valueraw2_list[i]
+        valueraw3=valueraw3_list[i]
+        valueraw4=valueraw4_list[i]
+        rawatt=valueraw1+valueraw2
+        rawrep=valueraw3+valueraw4
+        column_name=typelist[i]
+        column_name_att=column_name+'att'
+        column_name_rep=column_name+'rep'
+        full_data[column_name_att]=rawatt
+        print(full_data,rawatt)
+        full_data[column_name_rep]=rawrep
+    full_data.drop(columns=['a'],inplace=True)
+    return full_data
 if __name__ == '__main__':
     database_plot_pre_multiple('interaction', MTFE=0)
