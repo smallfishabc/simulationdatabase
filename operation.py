@@ -36,7 +36,6 @@ def GS_length_calculation(sequence):
 # Calculate the Re Ratio between target protein and ideal polymer
 def chi_value_calculation(data,protein,MTFE,sequence):
     ee=multiple_selection_function(data,protein,'ee',MTFE)['Rs'].tolist()[0]
-    print(ee)
     l_GS=GS_length_calculation(sequence)
     chi=ee/l_GS-1
     return(chi)
@@ -71,7 +70,6 @@ def database_plot_pre(datatype,MTFE=0):
         #value = (valueraw1 + 2 * valueraw2) / len(sequence)
         #value = (valueraw1 + valueraw2) / len(sequence)
         value = (valueraw1 +  valueraw2 + valueraw3 +  valueraw4) / len(sequence)
-        print(value)
         chi_0=chi_value_calculation(df,protein_name, 0,sequence)
         att_sensitivity=attractive_sensitivity_calculation(df,protein_name,sequence,chi_0)
         rep_sensitivity=repulsive_sensitivity_calculation(df, protein_name, sequence, chi_0)
@@ -88,6 +86,8 @@ def database_plot_pre_multiple(datatype,MTFE=0,index=0):
     for i in range(len(df_entry)):
         protein_name = df_entry.loc[i, 'Protein']
         sequence = df_entry.loc[i, 'Sequence']
+        # Add the df_protein for selecting sequence feature
+        df_protein = df[df['Protein'] == protein_name]
         # Covert list from csv to python list
         valueraw1_raw = multiple_selection_function(df,protein_name,datatype,MTFE)['att1'].tolist()[0]
         valueraw1_list=datacleaning.covert_string_tolist(valueraw1_raw)
@@ -110,14 +110,17 @@ def database_plot_pre_multiple(datatype,MTFE=0,index=0):
         # value = (valueraw1 +  valueraw2 + valueraw3 + valueraw4)
         # value = (valueraw1 + valueraw2 - valueraw3 - valueraw4)
         value = (valueraw1+valueraw2)
-        value2 = (valueraw4)
+        value2 = (valueraw3+valueraw4)
         # print(value)
         chi_0=chi_value_calculation(df,protein_name, 0,sequence)
         att_sensitivity=attractive_sensitivity_calculation(df,protein_name,sequence,chi_0)
         rep_sensitivity=repulsive_sensitivity_calculation(df, protein_name, sequence, chi_0)
         heli=multiple_selection_function(df, protein_name, 'helix', 0)['Rs'].tolist()[0]
-        print(heli)
-        dict_pd={'Protein': protein_name,type+'att':value,type+'rep':value2,'chi_0':chi_0,'att_sensitivity':att_sensitivity,'rep_sensitivity':rep_sensitivity,'Helicity':heli}
+        HB = multiple_selection_function(df, protein_name, 'HB', 0)['Rs'].tolist()[0]
+        # Calculate Kappa value
+        delta = select_datatype_data(df_protein, 'feature', MTFE=0)['delta']
+        dict_pd={'Protein': protein_name,type+'att':value,type+'rep':value2,'chi_0':chi_0,'att_sensitivity':att_sensitivity,
+                 'rep_sensitivity':rep_sensitivity,'Helicity':heli,'H-bonds':HB,'delta':delta}
         new_data=pd.DataFrame(dict_pd,index=[0])
         full_df = pd.concat([full_df, new_data], ignore_index=True)
         full_df.to_csv('interaction_strength_fitting_1014.csv',index=False)

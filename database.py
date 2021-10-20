@@ -16,13 +16,15 @@ def load_data(df):
     df_HB = add_data_HB('BB_HB_5en.csv', df, 'HB')
     # Add Helicity
     df_helix = add_data('BB_Heli_5en.csv', df, 'helix')
+    # Add beta-sheet propensity
+    df_beta = add_data('BB_Beta_easy.csv', df, 'beta')
     # Add interaction strength
     df_interaction = add_data('BBcontact_list_cutoff_far_standard_value.csv', df, 'interaction')
     # Add sequence features
     df_feature = add_data_sequence_feature(df)
     # df_interaction = add_data('BB_contact_lines.csv',df,'interaction')
     # Merge the data to a single dataframe
-    fulldata = pd.concat([df_ee, df_rg, df_HB, df_helix, df_interaction, df_feature])
+    fulldata = pd.concat([df_ee, df_rg, df_HB, df_helix, df_beta, df_interaction, df_feature])
     # Save the final data to a csv file
     # fulldata.to_csv('fulldata.csv', index=False)
     return fulldata
