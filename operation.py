@@ -79,9 +79,9 @@ def database_plot_pre(datatype,MTFE=0):
     return full_df
 # Designed for calculating several value in on function
 def database_plot_pre_multiple(datatype,MTFE=0,index=8):
-    os.chdir('/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum')
+    #os.chdir('/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum')
     df_entry = pd.read_csv('database_entry.csv')
-    df = pd.read_csv('database_full_value_1017_cutoff_5_far_standard_value.csv')
+    df = pd.read_csv('database_full_value_1021_iupred.csv')
     full_df= pd.DataFrame()
     for i in range(len(df_entry)):
         protein_name = df_entry.loc[i, 'Protein']
@@ -89,29 +89,16 @@ def database_plot_pre_multiple(datatype,MTFE=0,index=8):
         # Add the df_protein for selecting sequence feature
         df_protein = df[df['Protein'] == protein_name]
         # Covert list from csv to python list
-        valueraw1_raw = multiple_selection_function(df,protein_name,datatype,MTFE)['att1'].tolist()[0]
-        valueraw1_list=datacleaning.covert_string_tolist(valueraw1_raw)
-        valueraw2_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['att2'].tolist()[0]
-        valueraw2_list = datacleaning.covert_string_tolist(valueraw2_raw)
-        valueraw3_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['rep1'].tolist()[0]
-        valueraw3_list = datacleaning.covert_string_tolist(valueraw3_raw)
-        valueraw3_list = datacleaning.absolute_value(valueraw3_list)
-        valueraw4_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['rep2'].tolist()[0]
-        valueraw4_list = datacleaning.covert_string_tolist(valueraw4_raw)
-        valueraw4_list = datacleaning.absolute_value(valueraw4_list)
+        valueraw1_list, valueraw2_list, valueraw3_list, valueraw4_list=interaction_list_generate(df, protein_name, datatype, MTFE)
+        valueraw1_list_p3, valueraw2_list_p3, valueraw3_list_p3, valueraw4_list_p3 = interaction_list_generate(df, protein_name,
+                                                                                                   datatype, MTFE=3)
+        valueraw1_list_m3, valueraw2_list_m3, valueraw3_list_m3, valueraw4_list_m3 = interaction_list_generate(df, protein_name,
+                                                                                                   datatype, MTFE=-3)
         # Record the datatype of each value using typelist
         typelist=['none_none','none_ratio','none_probability','dis_none','dis_ratio','dis_probability','rtdis_none','rtdis_ratio','rtdis_probability']
         # Select data from the list
         type=typelist[index]
-        valueraw1 = valueraw1_list[index]
-        valueraw2 = valueraw2_list[index]
-        valueraw3 = valueraw3_list[index]
-        valueraw4 = valueraw4_list[index]
-        # value = (valueraw1 +  valueraw2 + valueraw3 + valueraw4)
-        # value = (valueraw1 + valueraw2 - valueraw3 - valueraw4)
-        value = (valueraw1+valueraw2)
-        value2 = (valueraw3+valueraw4)
-        # print(value)
+        #
         interaction_data=interaction_pre_list(index, typelist, valueraw1_list, valueraw2_list, valueraw3_list, valueraw4_list)
         chi_0=chi_value_calculation(df,protein_name, 0,sequence)
         att_sensitivity=attractive_sensitivity_calculation(df,protein_name,sequence,chi_0)
@@ -135,6 +122,19 @@ def plot_pre_list(datatype):
         j=database_plot_pre_multiple(datatype,MTFE=0,index=i)
         list_data.append(j)
     return list_data
+# To simplify the interaction calculation process, we created two separate functions
+def interaction_list_generate(df, protein_name, datatype, MTFE):
+    valueraw1_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['att1'].tolist()[0]
+    valueraw1_list = datacleaning.covert_string_tolist(valueraw1_raw)
+    valueraw2_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['att2'].tolist()[0]
+    valueraw2_list = datacleaning.covert_string_tolist(valueraw2_raw)
+    valueraw3_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['rep1'].tolist()[0]
+    valueraw3_list = datacleaning.covert_string_tolist(valueraw3_raw)
+    valueraw3_list = datacleaning.absolute_value(valueraw3_list)
+    valueraw4_raw = multiple_selection_function(df, protein_name, datatype, MTFE)['rep2'].tolist()[0]
+    valueraw4_list = datacleaning.covert_string_tolist(valueraw4_raw)
+    valueraw4_list = datacleaning.absolute_value(valueraw4_list)
+    return (valueraw1_list,valueraw2_list,valueraw3_list,valueraw4_list)
 def interaction_pre_list(index,typelist,valueraw1_list,valueraw2_list,valueraw3_list,valueraw4_list):
     full_data=pd.DataFrame({'a':1},index=[0])
     for i in range(index):
@@ -148,7 +148,6 @@ def interaction_pre_list(index,typelist,valueraw1_list,valueraw2_list,valueraw3_
         column_name_att=column_name+'att'
         column_name_rep=column_name+'rep'
         full_data[column_name_att]=rawatt
-        print(full_data,rawatt)
         full_data[column_name_rep]=rawrep
     full_data.drop(columns=['a'],inplace=True)
     return full_data
