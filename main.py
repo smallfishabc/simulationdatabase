@@ -9,15 +9,16 @@ import database
 # If we run this script
 if __name__ == '__main__':
     # Set the target directory
-    directory = 'F:\DATA_F\PDBsum'
+    directory = 'F:\DATA_F\puma_scramble_new\puma_scrammble_sum'
+    os.chdir(directory)
     # Special directory setting for linux system
-    linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum'
+    #linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum'
     #linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/PDBsum'
-    directory=linux_directory
+    #directory=linux_directory
     # Print out the directory for testing
     print(directory)
     # Generate a protein entry database containing the subdirectory for each protein
-    Generatedatabase.generate_database(directory)
+    #Generatedatabase.generate_database(directory)
     # Load the entry dataframe
     df = pd.read_csv('database_entry.csv')
     # Load data into the full protein dataframe
@@ -27,5 +28,5 @@ if __name__ == '__main__':
     # Print for test
     print('a')
     # Save the csv file
-    test.to_csv('database_full_value_1017_cutoff_5_far_standard_value.csv',index=False)
+    test.to_csv('database_full_value_1021_iupred.csv',index=False)
 

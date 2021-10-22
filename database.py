@@ -17,9 +17,9 @@ def load_data(df):
     # Add Helicity
     df_helix = add_data('BB_Heli_5en.csv', df, 'helix')
     # Add beta-sheet propensity
-    df_beta = add_data('BB_Beta_easy.csv', df, 'beta')
+    df_beta = add_data('BB_Beta_5en.csv', df, 'beta')
     # Add interaction strength
-    df_interaction = add_data('BBcontact_list_cutoff_far_standard_value.csv', df, 'interaction')
+    df_interaction = add_data('BBcontact_list.csv', df, 'interaction')
     # Add sequence features
     df_feature = add_data_sequence_feature(df)
     # df_interaction = add_data('BB_contact_lines.csv',df,'interaction')
@@ -103,6 +103,8 @@ def add_data_sequence_feature(entrydf, data_type='feature'):
         protein_directory = entrydf.loc[i, 'Directory']
         # Retrieve the protein sequence
         sequence = entrydf.loc[i, 'Sequence']
+        # Retrieve the iupred score
+        iupred_score = entrydf.loc[i,'iupred']
         # Analyse the sequence feature
         length = len(sequence)
         print(sequence, length)
@@ -112,7 +114,7 @@ def add_data_sequence_feature(entrydf, data_type='feature'):
         # Feng_calculation()
         # Create a new dataframe fo the sequence feature
         new_data = pd.DataFrame(
-            {'Protein': protein_name, 'datatype': data_type, 'Sequence': sequence, 'length': length}, index=[0])
+            {'Protein': protein_name, 'datatype': data_type, 'Sequence': sequence, 'length': length, 'iupred': iupred_score}, index=[0])
         new_data = pd.concat([new_data, pd_feature], axis=1)
         # Insert a dictionary containing all cider data
         # new_data.insert(3)
