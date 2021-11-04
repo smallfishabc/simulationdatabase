@@ -17,9 +17,10 @@ def load_data(df):
     # Add Helicity
     df_helix = add_data('BB_Heli_5en.csv', df, 'helix')
     # Add beta-sheet propensity
-    df_beta = add_data('BB_Beta_easy.csv', df, 'beta')
+    df_beta = add_data('BB_Beta_5en.csv', df, 'beta')
     # Add interaction strength
-    df_interaction = add_data('BBcontact_list_cutoff_far_standard_value.csv', df, 'interaction')
+    df_interaction = add_data('BBcontact_list.csv', df ,'interaction')
+    #df_interaction = add_data('BBcontact_list_cutoff_far_standard_value.csv', df, 'interaction')
     # Add sequence features
     df_feature = add_data_sequence_feature(df)
     # df_interaction = add_data('BB_contact_lines.csv',df,'interaction')

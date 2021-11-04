@@ -11,8 +11,11 @@ if __name__ == '__main__':
     # Set the target directory
     directory = 'F:\DATA_F\PDBsum'
     # Special directory setting for linux system
-    linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum'
+    #linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/YAP_shahar'
+    #linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum'
     #linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/PDBsum'
+    linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/PDBsumreal'
+    #linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/LEA_ceasar'
     directory=linux_directory
     # Print out the directory for testing
     print(directory)
@@ -27,5 +30,5 @@ if __name__ == '__main__':
     # Print for test
     print('a')
     # Save the csv file
-    test.to_csv('database_full_value_1017_cutoff_5_far_standard_value.csv',index=False)
+    test.to_csv('database_full_value_1103.csv',index=False)
 
