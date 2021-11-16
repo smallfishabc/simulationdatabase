@@ -14,7 +14,12 @@ import database
 # This library can also generate a dataframe/csv file to summarize the structural property of IDPs including my novel
 # interaction map method.
 
-# This is the main function of the library. If we run this script with specific directory, it will give out what I need.
+# This is the main function of the library. If we run this script with specific directory, it will save the required data
+# to csv.
+
+# Here the database_entry.csv stores the information of simulation settings and the file location.
+
+# The database_full saved the required analysis result.
 if __name__ == '__main__':
     # Set the target directory
     directory = 'F:\DATA_F\PDBsum'
