@@ -5,8 +5,16 @@ import pandas as pd
 import correlationplot
 import Generatedatabase
 import database
+# This simulation database library is used to manage and analyse the large SolSpace intriniscally disorderded protein (IDP)
+# database.
 
-# If we run this script
+# In this library, each protein will be simulated under 3-9 different solution condition. Each solution condition will
+# have 3-5 repeats. I created a class to automatically detect the simulation configuration and directory of the dataset.
+
+# This library can also generate a dataframe/csv file to summarize the structural property of IDPs including my novel
+# interaction map method.
+
+# This is the main function of the library. If we run this script with specific directory, it will give out what I need.
 if __name__ == '__main__':
     # Set the target directory
     directory = 'F:\DATA_F\PDBsum'
