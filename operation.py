@@ -16,7 +16,7 @@ def select_datatype_data(data, datatype, MTFE=0):
     typedata = data[data['datatype'] == datatype].reset_index()
     return typedata
 
-# Select the protein we want
+# Select the Protein we want
 def select_protein_data(data, protein):
     protein_data = data[data['Protein'] == protein].reset_index()
     return protein_data
@@ -33,7 +33,7 @@ def GS_length_calculation(sequence):
     length=len(sequence)
     return(0.55359657*(length)**0.47499067)
 
-# Calculate the Re Ratio between target protein and ideal polymer
+# Calculate the Re Ratio between target Protein and ideal polymer
 def chi_value_calculation(data,protein,MTFE,sequence):
     ee=multiple_selection_function(data,protein,'ee',MTFE)['Rs'].tolist()[0]
     l_GS=GS_length_calculation(sequence)

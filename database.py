@@ -59,17 +59,17 @@ def load_data_easy(df):
 def add_data(filename, entrydf, data_type):
     # Create an empty dataframe
     full_df = pd.DataFrame()
-    # Using loop to add every protein data into the dataframe
+    # Using loop to add every Protein data into the dataframe
     for i in range(len(entrydf)):
-        # Retrieve the protein name
+        # Retrieve the Protein name
         protein_name = entrydf.loc[i, 'Protein']
-        # Retrieve the protein directory
+        # Retrieve the Protein directory
         protein_directory = entrydf.loc[i, 'Directory']
         # Read data from the directory
         new_data = read_data(protein_directory, filename)
         # Add datatype to the raw data
         new_data.insert(0, 'datatype', data_type)
-        # Add protein name to the raw data
+        # Add Protein name to the raw data
         new_data.insert(0, 'Protein', protein_name)
         # Add these data to the dataframe
         full_df = pd.concat([full_df, new_data], ignore_index=True)
@@ -91,18 +91,18 @@ def add_data_HB(filename, entrydf, data_type):
     return full_df
 
 
-# This function will use cider and other computational package to calculate the sequence features of the protein
+# This function will use cider and other computational package to calculate the sequence features of the Protein
 # To be finished
 def add_data_sequence_feature(entrydf, data_type='feature'):
     # Create an empty dataframe
     full_df = pd.DataFrame()
-    # Using loop to add every protein data into the dataframe
+    # Using loop to add every Protein data into the dataframe
     for i in range(len(entrydf)):
-        # Retrieve the protein name
+        # Retrieve the Protein name
         protein_name = entrydf.loc[i, 'Protein']
-        # Retrieve the protein directory
+        # Retrieve the Protein directory
         protein_directory = entrydf.loc[i, 'Directory']
-        # Retrieve the protein sequence
+        # Retrieve the Protein sequence
         sequence = entrydf.loc[i, 'Sequence']
         # Analyse the sequence feature
         length = len(sequence)

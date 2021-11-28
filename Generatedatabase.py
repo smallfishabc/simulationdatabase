@@ -5,13 +5,12 @@ Created on Wed Aug 11 16:21:42 2021
 @author: ShaharGroup-fyu
 """
 
-import pandas as pd
-import numpy as np
 import os
-import re
-import mdtraj as md
-import statistics as st
+
+import pandas as pd
+
 import proteinlistlibrary
+
 
 # Generate a list of the sub-directory (Old version) (Can be updated next time)
 def listsubdirectory(listname, targetdir):
@@ -28,41 +27,53 @@ def listsubdirectory(listname, targetdir):
             listname.append(n)
 
 
-# Generate the entrance for all protein trajectory and save their information
+# Generate the entrance for all Protein trajectory and save their information
 def generate_database(string):
     # Confirm the working directory
     print(string)
     # List all sub-directory in the folder
     names = []
     listsubdirectory(names, string)
-    # Retrieve the protein name from the folder name
-    disprotname = []
+    # Retrieve the Protein name from the folder name
+    disprot_name = []
     for h in names:
-        disprotname.append(h.split("-")[0])  ##payattention no - in folders names
+        disprot_name.append(h.split("-")[0])  ##payattention no - in folders names
     # Is this line useful?(Double check in next version)
-    disprotname = set(disprotname)
+    disprot_name = set(disprot_name)
     # Create a empty list for storing object
-    objectlist = []
-    # Append all protein object to the list
-    for h in disprotname:
-        # Confirm the protein name
+    object_list = []
+    # Append all Protein object to the list
+    for h in disprot_name:
+        # Confirm the Protein name
         print(h)
-        # Create the protein object
-        q = proteinlistlibrary.protein(h, string)
-        objectlist.append(q)
+        # Create the Protein object
+        q = proteinlistlibrary.Protein(h, string)
+        object_list.append(q)
     # Create an empty dataframe
     df = pd.DataFrame(columns=['Protein', 'Directory', 'Sequence', 'Resitype', 'Psivalue', 'Repeats'])
     # Append the data to the empty dataframe
-    for i in objectlist:
-        values_to_add = {'Protein': i.name, 'Directory': i.path, 'Sequence': i.getsequence(),
-                         'Resitype': [k.name for k in i.getssstype()], 'Psivalue': [k.name for k in i.getssstype()[0].getsssvalue()],
-                         'Repeats': i.getssstype()[0].getsssvalue()[0].getrepeats()}
-        row_to_add = pd.Series(values_to_add)
-        df = df.append(row_to_add, ignore_index=True)
+    for i in object_list:
+        # To see whether we have single solution condition.
+        if len(i.get_sss_solution_type()) == 1:
+            # Add required value to the dataframe
+            values_to_add = {'Protein': i.name, 'Directory': i.path, 'Sequence': i.get_sequence(),
+                             'Resitype': [k.name for k in i.get_sss_solution_type()],
+                             'Psivalue': [k.concentration for k in i.type_object],
+                             'Repeats': i.type_object[0].repeats}
+            row_to_add = pd.DataFrame(values_to_add)
+            # Following lines can help me covert this list type to single value in pandas.
+            # However, for the convenience, I will still keep the list style here.
+            #            row_to_add = row_to_add.explode('Resitype')
+            #            row_to_add = row_to_add.explode('Psivalue')
+            df = df.append(row_to_add, ignore_index=True)
+        else:
+            # Currently we only support single solution type, so it will raise a error if we input different conditions.
+            raise ValueError('Currently, we only support single solution type')
     # Change back to the target directory and save the csv (Whether necessary? Need to check on next version)
     os.chdir(string)
     df.to_csv('database_entry.csv', index=False)
-    return objectlist
+    return object_list
+
 
 # This function only generate a object list without generating a dataframe.(Designed to be called by other scripts)
 def generate_database_standalone(string):
@@ -71,19 +82,19 @@ def generate_database_standalone(string):
     # List all sub-directory in the folder
     names = []
     listsubdirectory(names, string)
-    # Retrieve the protein name from the folder name
-    disprotname = []
+    # Retrieve the Protein name from the folder name
+    disprot_name = []
     for h in names:
-        disprotname.append(h.split("-")[0])  ##payattention no - in folders names
+        disprot_name.append(h.split("-")[0])  ##payattention no - in folders names
     # Is this line useful?(Double check in next version)
-    disprotname = set(disprotname)
+    disprot_name = set(disprot_name)
     # Create a empty list for storing object
-    objectlist = []
-    # Append all protein object to the list
-    for h in disprotname:
-        # Confirm the protein name
+    object_list = []
+    # Append all Protein object to the list
+    for h in disprot_name:
+        # Confirm the Protein name
         print(h)
-        # Create the protein object
-        q = proteinlistlibrary.protein(h, string)
-        objectlist.append(q)
-    return objectlist
+        # Create the Protein object
+        q = proteinlistlibrary.Protein(h, string)
+        object_list.append(q)
+    return object_list

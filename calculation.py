@@ -13,7 +13,7 @@ def calculate_rg(repeats,directory):
     meantraj=[]
     for nn in range(repeats):
         t = md.load({'__traj_' + str(nn) + '.xtc'}, top='__START_0.pdb')
-        u = t.top.select('protein')
+        u = t.top.select('Protein')
         r = t.atom_slice(u)
         j = r.n_frames
         frametraj.append(j)
@@ -41,7 +41,7 @@ def mean_feng(value,count,repeats):
 def calculation_structure(protein,function):
     string=protein.path
     os.chdir(string)
-    l=protein.getssstype()
+    l=protein.get_sss_solution_type()
     for h in l:
         mean = []
         sd = []
