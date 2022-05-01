@@ -1,5 +1,5 @@
 import os
-
+import numpy as np
 import pandas as pd
 import datacleaning
 import database
@@ -41,14 +41,14 @@ def chi_value_calculation(data,protein,MTFE,sequence):
     return(chi)
 
 # Calculate the solution sensitivity of proteins in attractive solutions
-def attractive_sensitivity_calculation(data,protein,sequence,chi_0,datatype='ee'):
-    chi_p3=chi_value_calculation(data,protein,3,sequence)
+def attractive_sensitivity_calculation(data,protein,sequence,chi_0,datatype='ee',MTFE=3):
+    chi_p3=chi_value_calculation(data,protein,MTFE,sequence)
     sensitivity= chi_p3-chi_0
     return sensitivity
 
 # Calculate the solution sensitivity of proteins in repulsive solutions
-def repulsive_sensitivity_calculation(data,protein,sequence,chi_0,datatype='ee'):
-    chi_m3=chi_value_calculation(data,protein,-3,sequence)
+def repulsive_sensitivity_calculation(data,protein,sequence,chi_0,datatype='ee',MTFE=-3):
+    chi_m3=chi_value_calculation(data,protein,MTFE,sequence)
     sensitivity= chi_m3-chi_0
     return sensitivity
 
@@ -82,10 +82,16 @@ def database_plot_pre_multiple(datatype,MTFE=0,index=8):
     #os.chdir('/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum')
     df_entry = pd.read_csv('database_entry.csv')
     df = pd.read_csv('database_full_value_1021_iupred.csv')
+    #df = pd.read_csv('database_full_value_1021_urgent.csv')
+    #df = pd.read_csv('database_full_value_1020.csv')
+    #df = pd.read_csv('database_full_value_1104_PDBsumreal.csv')
     full_df= pd.DataFrame()
     for i in range(len(df_entry)):
         protein_name = df_entry.loc[i, 'Protein']
         sequence = df_entry.loc[i, 'Sequence']
+        seq_length = len(sequence)
+        seq_length_rt=np.sqrt(seq_length)
+        #iupred = df_entry.loc[i,'iupred']
         # Add the df_protein for selecting sequence feature
         df_protein = df[df['Protein'] == protein_name]
         # Covert list from csv to python list
@@ -98,23 +104,28 @@ def database_plot_pre_multiple(datatype,MTFE=0,index=8):
         typelist=['none_none','none_ratio','none_probability','dis_none','dis_ratio','dis_probability','rtdis_none','rtdis_ratio','rtdis_probability']
         # Select data from the list
         type=typelist[index]
-        #
-        interaction_data=interaction_pre_list(index, typelist, valueraw1_list, valueraw2_list, valueraw3_list, valueraw4_list)
+
+        interaction_data=interaction_pre_list(index, seq_length,typelist, valueraw1_list, valueraw2_list, valueraw3_list, valueraw4_list)
+        interaction_data_p3 = interaction_pre_list(index, seq_length,typelist, valueraw1_list_p3, valueraw2_list_p3, valueraw3_list_p3,
+                                                valueraw4_list_p3,MTFE=3)
+        interaction_data_m3 = interaction_pre_list(index, seq_length,typelist, valueraw1_list_m3, valueraw2_list_m3, valueraw3_list_m3,
+                                                valueraw4_list_m3,MTFE=-3)
         chi_0=chi_value_calculation(df,protein_name, 0,sequence)
-        att_sensitivity=attractive_sensitivity_calculation(df,protein_name,sequence,chi_0)
-        rep_sensitivity=repulsive_sensitivity_calculation(df, protein_name, sequence, chi_0)
+        att_sensitivity=attractive_sensitivity_calculation(df,protein_name,sequence,chi_0,MTFE=3)
+        rep_sensitivity=repulsive_sensitivity_calculation(df, protein_name, sequence, chi_0,MTFE=-3)
         heli=multiple_selection_function(df, protein_name, 'helix', 0)['Rs'].tolist()[0]
         HB = multiple_selection_function(df, protein_name, 'HB', 0)['Rs'].tolist()[0]
+        beta = multiple_selection_function(df, protein_name, 'beta', 0)['Rs'].tolist()[0]
         # Calculate Kappa value
         delta = select_datatype_data(df_protein, 'feature', MTFE=0)['delta']
         #dict_pd={'Protein': protein_name,type+'att':value,type+'rep':value2,'chi_0':chi_0,'att_sensitivity':att_sensitivity,
         #       'rep_sensitivity':rep_sensitivity,'Helicity':heli,'H-bonds':HB,'delta':delta}
-        dict_pd={'Protein': protein_name,'chi_0':chi_0,'att_sensitivity':att_sensitivity,
-               'rep_sensitivity':rep_sensitivity,'Helicity':heli,'H-bonds':HB,'delta':delta}
+        dict_pd={'Protein': protein_name,'length':seq_length,'chi_0':chi_0,'att_sensitivity':att_sensitivity,
+               'rep_sensitivity':rep_sensitivity,'Helicity':heli,'H-bonds':HB,'delta':delta,'Beta_sheet':beta}
         new_data = pd.DataFrame(dict_pd,index=[0])
-        new_data = pd.concat([new_data,interaction_data],axis=1)
+        new_data = pd.concat([new_data,interaction_data,interaction_data_m3,interaction_data_p3],axis=1)
         full_df = pd.concat([full_df, new_data], ignore_index=True)
-        full_df.to_csv('interaction_strength_fitting_1014.csv',index=False)
+        full_df.to_csv('interaction_strength_fitting_1109.csv',index=False)
     return full_df
 def plot_pre_list(datatype):
     list_data=[]
@@ -135,18 +146,20 @@ def interaction_list_generate(df, protein_name, datatype, MTFE):
     valueraw4_list = datacleaning.covert_string_tolist(valueraw4_raw)
     valueraw4_list = datacleaning.absolute_value(valueraw4_list)
     return (valueraw1_list,valueraw2_list,valueraw3_list,valueraw4_list)
-def interaction_pre_list(index,typelist,valueraw1_list,valueraw2_list,valueraw3_list,valueraw4_list):
+def interaction_pre_list(index,seq_length,typelist,valueraw1_list,valueraw2_list,valueraw3_list,valueraw4_list,MTFE=0):
     full_data=pd.DataFrame({'a':1},index=[0])
     for i in range(index):
         valueraw1=valueraw1_list[i]
         valueraw2=valueraw2_list[i]
         valueraw3=valueraw3_list[i]
         valueraw4=valueraw4_list[i]
-        rawatt=valueraw1+valueraw2
-        rawrep=valueraw3+valueraw4
+        #rawatt=(valueraw1+valueraw2)/seq_length
+        rawatt = (valueraw1 + valueraw2)
+        #rawrep=(valueraw3+valueraw4)/seq_length
+        rawrep = (valueraw3 + valueraw4)
         column_name=typelist[i]
-        column_name_att=column_name+'att'
-        column_name_rep=column_name+'rep'
+        column_name_att=column_name+'att'+str(MTFE)
+        column_name_rep=column_name+'rep'+str(MTFE)
         full_data[column_name_att]=rawatt
         full_data[column_name_rep]=rawrep
     full_data.drop(columns=['a'],inplace=True)

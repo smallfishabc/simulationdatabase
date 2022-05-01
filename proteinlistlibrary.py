@@ -76,6 +76,7 @@ class protein:
         typelist = []
         # Find the type by searching the sub-folder
         for path, dirs, files in os.walk(self.path):
+            print(dirs)
             for dirname in dirs:
                 print(dirname)
                 # Create a type object storing the solution concentration of that type

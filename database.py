@@ -43,16 +43,61 @@ def load_data_easy(df):
     # Add Helicity
     df_helix = add_data('BB_Heli_easy.csv', df, 'helix')
     # Add interaction strength
-    # df_interaction = add_data('BBcontact_list.csv', df, 'interaction')
+    df_interaction = add_data('BBcontact_list.csv', df, 'interaction')
     # Add sequence features
     df_feature = add_data_sequence_feature(df)
     # df_interaction = add_data('BB_contact_lines.csv',df,'interaction')
     # Merge the data to a single dataframe
-    fulldata = pd.concat([df_ee, df_rg, df_HB, df_helix, df_feature])
+    fulldata = pd.concat([df_ee, df_rg, df_HB, df_helix, df_interaction, df_feature])
     # Save the final data to a csv file
     # fulldata.to_csv('fulldata.csv', index=False)
     return fulldata
 
+def load_data_easy_no_interation_feature(df):
+    # Add selected data to the dataframe
+    # Add Radius of Gyration
+    df_rg = add_data('BBrawRG_easy.csv', df, 'rg')
+    # Add End to End distance
+    df_ee = add_data('BBEERG_easy.csv', df, 'ee')
+    # Add average hydrogen bonds number.(The format of HB file is slightly different from other data. This will
+    # be fixed in future update)
+    df_HB = add_data_HB('BB_HB_easy.csv', df, 'HB')
+    # Add Helicity
+    df_helix = add_data('BB_Heli_easy.csv', df, 'helix')
+    # Add beta-sheet propensity
+    df_beta = add_data('BB_Beta_easy.csv', df, 'beta')
+    # Add sequence features
+    #df_feature = add_data_sequence_feature(df)
+    # df_interaction = add_data('BB_contact_lines.csv',df,'interaction')
+    # Merge the data to a single dataframe
+    fulldata = pd.concat([df_ee, df_rg, df_HB, df_helix, df_beta])
+    # Save the final data to a csv file
+    # fulldata.to_csv('fulldata.csv', index=False)
+    return fulldata
+
+def load_data_easy_entropy(df):
+    # Add selected data to the dataframe
+    # Add Radius of Gyration
+    df_rg = add_data('BBrawRG_easy.csv', df, 'rg')
+    # Add End to End distance
+    df_ee = add_data('BBEERG_easy.csv', df, 'ee')
+    # Add average hydrogen bonds number.(The format of HB file is slightly different from other data. This will
+    # be fixed in future update)
+    df_HB = add_data_HB('BB_HB_easy.csv', df, 'HB')
+    # Add Helicity
+    df_helix = add_data('BB_Heli_easy.csv', df, 'helix')
+    # Add beta-sheet propensity
+    df_beta = add_data('BB_Beta_5en.csv', df, 'beta')
+    # Add entropic_data under xxx condition
+
+    # Add sequence features
+    #df_feature = add_data_sequence_feature(df)
+    # df_interaction = add_data('BB_contact_lines.csv',df,'interaction')
+    # Merge the data to a single dataframe
+    fulldata = pd.concat([df_ee, df_rg, df_HB, df_helix, df_beta])
+    # Save the final data to a csv file
+    # fulldata.to_csv('fulldata.csv', index=False)
+    return fulldata
 
 # Add data function
 def add_data(filename, entrydf, data_type):
@@ -104,7 +149,7 @@ def add_data_sequence_feature(entrydf, data_type='feature'):
         # Retrieve the protein sequence
         sequence = entrydf.loc[i, 'Sequence']
         # Retrieve the iupred score
-        iupred_score = entrydf.loc[i,'iupred']
+        #iupred_score = entrydf.loc[i,'iupred']
         # Analyse the sequence feature
         length = len(sequence)
         print(sequence, length)
@@ -113,8 +158,10 @@ def add_data_sequence_feature(entrydf, data_type='feature'):
         pd_feature = pd.DataFrame(dict_feature, index=[0])
         # Feng_calculation()
         # Create a new dataframe fo the sequence feature
+        #new_data = pd.DataFrame(
+        #    {'Protein': protein_name, 'datatype': data_type, 'Sequence': sequence, 'length': length, 'iupred': iupred_score}, index=[0])
         new_data = pd.DataFrame(
-            {'Protein': protein_name, 'datatype': data_type, 'Sequence': sequence, 'length': length, 'iupred': iupred_score}, index=[0])
+            {'Protein': protein_name, 'datatype': data_type, 'Sequence': sequence, 'length': length}, index=[0])
         new_data = pd.concat([new_data, pd_feature], axis=1)
         # Insert a dictionary containing all cider data
         # new_data.insert(3)

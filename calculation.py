@@ -2,78 +2,45 @@ import mdtraj as md
 import os
 import statistics as st
 import numpy as np
+import sum_all_easy_Template
+import ast
+import pandas as pd
 
 # This script is trying to integrate my existing stand alone analysis scripts.
 # These stand alone scripts are written in procedural programming.
+# We will pass the solution condition using the database_entry file into the sum_easy stand alone analysis script
+# We will also read the file location
 
-# Calculate the Radius of Gyration of the trajectory
-def calculate_rg(repeats,directory):
-    os.chdir(directory)
-    frametraj=[]
-    meantraj=[]
-    for nn in range(repeats):
-        t = md.load({'__traj_' + str(nn) + '.xtc'}, top='__START_0.pdb')
-        u = t.top.select('protein')
-        r = t.atom_slice(u)
-        j = r.n_frames
-        frametraj.append(j)
-        d = md.compute_rg(r)
-        meantraj.append(st.mean(d))
-    mean,sd,frame=mean_feng(meantraj,frametraj)
-    return (mean,sd,frame)
 
-# Different repeats may have different number of frames. We create a algorithm to calculated the average based on its
-# frame number
-def mean_feng(value,count,repeats):
-    framesum=0
-    meanadj=0
-    for nn in range(repeats):
-        framesum += count[nn]
-        meanadj += count[nn] * value[nn]
-    meanref = meanadj / framesum
-    stdadj = 0
-    for nn in range(repeats):
-        stdadj += count[nn] * (value[nn] - meanref) * (value[nn] - meanref)
-    sd=np.sqrt((stdadj / framesum) * repeats / (repeats-1))
-    return (meanref,sd,framesum)
+def read_energy(value_list_origin):
+    value_list=ast.literal_eval(value_list_origin)
+    print(value_list)
+    new_list =[('S_' + x) for x in value_list]
+    print(new_list)
+    num_list=[]
+    num_list =[ast.literal_eval(x) for x in value_list]
+    print(num_list)
+    return new_list, num_list
 
-# Calculation template for these stand alone functions.
-def calculation_structure(protein,function):
-    string=protein.path
-    os.chdir(string)
-    l=protein.getssstype()
-    for h in l:
-        mean = []
-        sd = []
-        frame = []
-        k=h.getsssvalue()
-        for p in k:
-            repeats=p.getrepeats()
-            runpath = str(string) + '/' + h.name + '/' + p.name
-            if function=='rg':
-                meanvalue,sdvalue,framevalue=calculate_rg(repeats,runpath)
-            mean.append(meanvalue)
-            sd.append(sdvalue)
-            frame.append(framevalue)
-    return()
-# Here, we will add a function to automatically run the existing scripts under the certain folder.
-def run_exist_scripts(datatype,entry_directory):
-    os.chdir(entry_directory)
-    if datatype is 'abc' :
-        pass
-    elif 1:
-        pass
-    elif 1:
-        pass
-    elif 1:
-        pass
-    return()
 
-def chi_calculation():
-    return
+def analyze_easy(home_directory, entrydf):
+    for i in range(len(entrydf)):
+        # Retrieve the protein name
+        protein_name = entrydf.loc[i, 'Protein']
+        # Retrieve the protein directory
+        protein_directory = entrydf.loc[i, 'Directory']
+        # Read MTFE from the entry dataframe
+        protein_energy, protein_energy_number = read_energy(entrydf.loc[i, 'Psivalue'])
+        # Read repeat number from the entry dataframe
+        protein_repeat = entrydf.loc[i, 'Repeats']
+        # Calculate the ensemble property
+        print(protein_energy, protein_energy_number)
+        #sum_all_easy_Template.easy_standard(protein_energy, protein_energy_number, protein_repeat, protein_directory)
+        # Change back to home directory
+        os.chdir(home_directory)
 
-def std_calculation():
-    return
-
-def temp_calculation():
-    return
+if __name__=="__main__":
+    home_directory='F:\DATA_F\GSlinker_entropic_force'
+    os.chdir(home_directory)
+    df = pd.read_csv('database_entry.csv')
+    analyze_easy(home_directory,df)
