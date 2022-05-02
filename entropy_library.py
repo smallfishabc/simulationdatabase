@@ -45,18 +45,6 @@ def limit_distance(d, theta, d_a):
     bot=(d+d_a)/np.tan(theta)
     return bot
 
-# r=sqrt(d_a**2+bot**2) bot=(d+d_a)*tan(theta) limit_angle(phi)=arccos(d_a/r)
-# To simplify the calculation here we return the cos_phi rather than do arccos.
-def cos_limit_angle(d, theta, d_a):
-    if d_a<-d:
-        return 1
-    bot=(d+d_a)*np.tan(theta)
-    r=np.sqrt(d_a**2+bot**2)
-    result=d_a/r
-    if result>=-1 and result<=1:
-        return result
-    else:
-        raise ValueError('Cosine out of range')
 # Following functions are for the entropic force rotation anaylsis
 # Here we use a1a2 as a rotation axis and rotate the entire conformation to
 # enhance sampling. 

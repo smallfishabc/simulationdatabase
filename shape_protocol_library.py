@@ -7,41 +7,7 @@ Created on Tue Apr 12 17:43:42 2022
 import mdtraj as md
 import numpy as np
 import sys
-sys.path.append(r'F:\DATA_F\All_analysis_test_github')
 import entropy_library as el
-
-# Compute how many possible conformations is prohibitted by constraint surface
-# The angle here is represented using the radian
-def compute_forbidden_old(angle,trajectory,location_of_alpha,number_of_frames):
-    # We can move the following part outside this function for better debugging
-    # efficiency in the Jupyter notebook
-    k=0
-    current_frame=0
-    allowed_frames=[]
-    prohibited_frames=[]
-    while current_frame<number_of_frames:
-        for i in location_of_alpha:
-            valueadjustment=1
-            # First alpha-carbon is our starting point
-            standard=trajectory.xyz[current_frame,location_of_alpha[0],:]
-            # The second alpha-carbon determine our standard vector. We can change this defination
-            standardvector=trajectory.xyz[current_frame,location_of_alpha[1],:]
-            a=trajectory.xyz[current_frame,i,:]
-            # Skill the starting residue
-            if i>location_of_alpha[1]:
-                # I think here we can change this to partial vector operation
-                valuea=np.sqrt((standardvector[0]-standard[0])*(standardvector[0]-standard[0])+(standardvector[1]-standard[1])*(standardvector[1]-standard[1])+(standardvector[2]-standard[2])*(standardvector[2]-standard[2]))
-                valueb=np.sqrt((a[0]-standard[0])*(a[0]-standard[0])+(a[1]-standard[1])*(a[1]-standard[1])+(a[2]-standard[2])*(a[2]-standard[2]))
-                value=(standardvector[0]-standard[0])*(a[0]-standard[0])+(standardvector[1]-standard[1])*(a[1]-standard[1])+(standardvector[2]-standard[2])*(a[2]-standard[2])
-                valueadjustment=value/valuea/valueb
-            if valueadjustment<np.sin(angle):
-                prohibited_frames.append(current_frame)
-                k+=1
-                break
-            else:
-                allowed_frames.append(current_frame)
-        current_frame+=1   
-    return(allowed_frames,prohibited_frames,k)
 
 # Here we can set a distance between the cone tip and the first alpha carbon
 def compute_forbidden_distance(distance,angle,trajectory,location_of_alpha,number_of_frames):
@@ -49,7 +15,6 @@ def compute_forbidden_distance(distance,angle,trajectory,location_of_alpha,numbe
     # efficiency in the Jupyter notebook
     k=0
     current_frame=0
-    allowed_frames=[]
     prohibited_frames=[]
     # In previous function, we consider the cone's apex is the first alpha carbon.
     # Here, we defined a distance between the cone's apex and the first alpha carbon. 
@@ -78,12 +43,13 @@ def compute_forbidden_distance(distance,angle,trajectory,location_of_alpha,numbe
                 prohibited_frames.append(current_frame)
                 k+=1
                 break
-            else:
-                allowed_frames.append(current_frame)
-        current_frame+=1   
-    return(allowed_frames,prohibited_frames,k)
+        current_frame+=1
+        ratio=(number_of_frames-k)
+    return (prohibited_frames,ratio)
+
 
 # Enhanced sampling
+    # Compared to other scripts, here the angle_theta = (np.pi-angle_theta
 def compute_forbiden_rotation_enhanced(distance,angle,trajectory,location_of_alpha,number_of_frames):
     current_frame=0
     # Rotation Interval 
@@ -93,7 +59,6 @@ def compute_forbiden_rotation_enhanced(distance,angle,trajectory,location_of_alp
     rot_repeat=int(360/rot_angle)-1
     # Convert degree to rad
     rot_angle_pi=rot_angle/360*2*3.141593
-    print(rot_angle_pi)
     # Create a np array to save memory processing time
     #This line is for the debugging which will give out the residue that is forbiddened
     #result=np.zeros((number_of_frames,rot_repeat+1,2))
