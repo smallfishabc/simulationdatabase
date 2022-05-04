@@ -110,6 +110,7 @@ def read_seq():
 
 # A protocol function for calculating all quantities above.
 def easy_standard(k,q,repeat,pwd):
+    os.chdir(pwd)
     print (pwd)
     seq,length=read_seq()
     h = 'BB'

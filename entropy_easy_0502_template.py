@@ -25,6 +25,7 @@ def read_seq():
 
 # A protocol function for calculating entropy with a cone constraint.
 def cone_entropy(k,q,repeat,pwd,distance_d,angle_theta):
+    os.chdir(pwd)
     print (pwd)
     seq,length=read_seq()
     h = 'BB'
@@ -54,6 +55,7 @@ def cone_entropy(k,q,repeat,pwd,distance_d,angle_theta):
     os.chdir(pwd)    
     dataframe = pd.DataFrame({'MTFE':q,'Omega2/Omega1':omega_list,'Frame':frametraj})
     pcsv=h+'_entropy_easy_'+'d'+str(round(distance_d,2))+'_theta'+str(round(angle_theta,2))+'_0502.csv'
+    dataframe.sort_values(by=['MTFE'], inplace=True)
     dataframe.to_csv(pcsv,index=False,sep=',')
 
 if __name__=="__main__":

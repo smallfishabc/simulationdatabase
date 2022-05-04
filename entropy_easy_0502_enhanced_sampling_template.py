@@ -27,6 +27,7 @@ def read_seq():
 # and enhanced sampling algorithm.
 # Compared to other scripts, here the angle_theta = (np.pi-angle_theta)
 def enhanced_sampling_surface(k,q,repeat,pwd,distance_d,angle_theta):
+    os.chdir(pwd)
     print (pwd)
     seq,length=read_seq()
     h = 'BB'
@@ -50,14 +51,14 @@ def enhanced_sampling_surface(k,q,repeat,pwd,distance_d,angle_theta):
         r_alpha=topology.select_atom_indices(selection='alpha')
         # The angle defination is different so we need to use np.pi/2-angle_theta
         result=spl.compute_forbiden_rotation_enhanced(distance_d,np.pi/2-angle_theta,t,r_alpha,j)
-        print(result)
-        ratio=np.average(result[:,:,0])        
+        ratio=np.average(result)
         # Record forbidden ratio and frame number
         ratio_list.append(ratio)
         frametraj.append(j)
     os.chdir(pwd)    
     dataframe = pd.DataFrame({'MTFE':q,'Omega2/Omega1':ratio_list,'Frame':frametraj})
     pcsv=h+'_entropy_enhanced_easy_'+'d'+str(round(distance_d,2))+'_theta'+str(round(angle_theta,2))+'_0502.csv'
+    dataframe.sort_values(by=['MTFE'], inplace=True)
     dataframe.to_csv(pcsv,index=False,sep=',')
 
 if __name__=="__main__":
