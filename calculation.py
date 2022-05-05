@@ -39,21 +39,22 @@ def analyze_easy(home_directory, entrydf):
         # Calculate the ensemble property
         print(protein_energy, protein_energy_number)
         #sum_all_easy_Template.easy_standard(protein_energy, protein_energy_number, protein_repeat, protein_directory)
-        distance_angle_pair_list=[(0.2,np.pi/6)]
+        distance_angle_pair_list=[(0,np.pi/3)]
         os.chdir(protein_directory)
         for i in distance_angle_pair_list:
             #entropy_easy_0502_template.cone_entropy(protein_energy, protein_energy_number, protein_repeat,protein_directory,i[0], i[1])
-            #if os.path.exists('BB_entropy_enhanced_easy_d0.2_theta0.52_0502.csv'):
+            #if os.path.exists('BB_entropy_enhanced_easy_'+'d'+str(round(i[0],2))+'_theta'+str(round(i[1],2))+'_0502.csv'):
                 #print(i)
                 #continue
             #else:
                 #entropy_easy_0502_enhanced_sampling_template.enhanced_sampling_surface(protein_energy,protein_energy_number,protein_repeat, protein_directory,i[0], i[1])
+
             platdist_0504_template.plat_entropy(protein_energy,protein_energy_number,protein_repeat, protein_directory,i[0])
         # Change back to home directory
         os.chdir(home_directory)
 
 if __name__=="__main__":
-    home_directory='F:\DATA_F\PDBsumreal'
+    home_directory='F:\DATA_F\GSlinker_entropic_force'
     os.chdir(home_directory)
     df = pd.read_csv('database_entry.csv')
     analyze_easy(home_directory,df)

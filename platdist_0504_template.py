@@ -65,7 +65,9 @@ def plat_entropy(k,q,repeat,pwd,distance_d):
         topology=t.topology
         r_alpha=topology.select_atom_indices(selection='alpha')
         frametraj.append(j)
-        temp=computeforbiden(0,t,r_alpha,j)
+        #-1 means lower than the platform
+        distance_d_adjust=-1*distance_d
+        temp=computeforbiden(distance_d_adjust,t,r_alpha,j)
         omega_list.append(temp)
     os.chdir(pwd)
     dataframe = pd.DataFrame({'MTFE':q,'Omega2/Omega1':omega_list,'Frame':frametraj})
