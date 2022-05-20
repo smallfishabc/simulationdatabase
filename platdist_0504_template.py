@@ -23,6 +23,7 @@ def read_seq():
 def computeforbiden(distance_d,t,r_alpha,jframes):
     k=0
     j=0
+    prohibited_frames=[]
     while j<jframes:
         for i in r_alpha:
             valuedot=1
@@ -39,10 +40,11 @@ def computeforbiden(distance_d,t,r_alpha,jframes):
                 valuedot=np.dot(standardvector,(a-standard))
                 value=valuedot/np.sqrt(valuea)
             if value<=distance_d:
+                prohibited_frames.append(j,i)
                 k+=1
                 break
         j+=1   
-    return(1-k/jframes)
+    return(1-k/jframes,prohibited_frames)
 arrange=0
 col=0
 def plat_entropy(k,q,repeat,pwd,distance_d):
@@ -64,10 +66,13 @@ def plat_entropy(k,q,repeat,pwd,distance_d):
         j = t.n_frames
         topology=t.topology
         r_alpha=topology.select_atom_indices(selection='alpha')
+        print(r_alpha)
         frametraj.append(j)
         #-1 means lower than the platform
         distance_d_adjust=-1*distance_d
-        temp=computeforbiden(distance_d_adjust,t,r_alpha,j)
+        temp,prohibited=computeforbiden(distance_d_adjust,t,r_alpha,j)
+        prohibited_df = pd.DataFrame(prohibited)
+        prohibited_df.to_csv('prohibited'+str(distance_d_adjust)+'_frame.csv', index=False, sep=',')
         omega_list.append(temp)
     os.chdir(pwd)
     dataframe = pd.DataFrame({'MTFE':q,'Omega2/Omega1':omega_list,'Frame':frametraj})
@@ -79,6 +84,7 @@ if __name__=="__main__":
     k = ['S_-3','S_-2','S_-1','S_0','S_1','S_2','S_3']
     q =[-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0]
     repeat=5
-    pwd=os.path.dirname(os.path.realpath(__file__))
-    distance_d=0
+    #pwd=os.path.dirname(os.path.realpath(__file__))
+    pwd='F:\DATA_F\GSlinker_entropic_force\GS16-summary'
+    distance_d=1
     plat_entropy(k,q,repeat,pwd,distance_d)        

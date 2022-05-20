@@ -65,7 +65,8 @@ if __name__=="__main__":
     k = ['S_-3','S_-2','S_-1','S_0','S_1','S_2','S_3']
     q =[-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0]
     repeat=5
-    pwd=os.path.dirname(os.path.realpath(__file__))
-    distance_d=0
+    #pwd=os.path.dirname(os.path.realpath(__file__))
+    pwd='F:\DATA_F\GSlinker_entropic_force\GS16-summary'
+    distance_d=1
     angle_theta=0.001
     enhanced_sampling_surface(k,q,repeat,pwd,distance_d,angle_theta)
