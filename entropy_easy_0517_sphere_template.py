@@ -24,7 +24,7 @@ def read_seq():
     return seq,x
 
 # A protocol function for calculating entropy with a cone constraint.
-def cone_entropy(k,q,repeat,pwd,distance_d,angle_theta):
+def cone_entropy(k,q,repeat,pwd,radius):
     os.chdir(pwd)
     print (pwd)
     seq,length=read_seq()
@@ -48,15 +48,15 @@ def cone_entropy(k,q,repeat,pwd,distance_d,angle_theta):
         j = r.n_frames
         topology=t.topology
         r_alpha=topology.select_atom_indices(selection='alpha')
-        prohibited,ratio=spl.compute_forbidden_distance(distance_d,angle_theta,t,r_alpha,j)
+        prohibited,ratio=spl.compute_forbidden_curvature(radius,t,r_alpha,j)
         prohibited_df = pd.DataFrame(prohibited)
-        prohibited_df.to_csv('prohibited'+'d'+str(distance_d)+'theta'+str(round(angle_theta,2))+'_frame.csv', index=False, sep=',')
+        prohibited_df.to_csv('prohibited'+'radius'+str(radius)+'_frame.csv', index=False, sep=',')
         # Record forbidden ratio and frame number
         omega_list.append(ratio/j)
         frametraj.append(j)
     os.chdir(pwd)
     dataframe = pd.DataFrame({'MTFE':q,'Omega2/Omega1':omega_list,'Frame':frametraj})
-    pcsv=h+'_entropy_easy_'+'d'+str(round(distance_d,2))+'_theta'+str(round(angle_theta,2))+'_0502.csv'
+    pcsv=h+'_entropy_easy_'+'radius'+str(radius)+'_0502.csv'
     dataframe.sort_values(by=['MTFE'], inplace=True)
     dataframe.to_csv(pcsv,index=False,sep=',')
 
@@ -66,7 +66,6 @@ if __name__=="__main__":
     q =[-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0]
     repeat=5
     #pwd=os.path.dirname(os.path.realpath(__file__))
-    pwd = 'F:\DATA_F\GSlinker_entropic_force\GS16-summary'
-    distance_d=1
-    angle_theta=np.pi/6
-    cone_entropy(k,q,repeat,pwd,distance_d,angle_theta)
+    pwd ='F:\DATA_F\GSlinker_entropic_force\GS8-summary'
+    radius=1
+    cone_entropy(k,q,repeat,pwd,radius)

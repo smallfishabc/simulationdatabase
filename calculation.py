@@ -38,22 +38,32 @@ def analyze_easy(home_directory, entrydf):
         protein_repeat = entrydf.loc[i, 'Repeats']
         # Calculate the ensemble property
         print(protein_energy, protein_energy_number)
-        #sum_all_easy_Template.easy_standard(protein_energy, protein_energy_number, protein_repeat, protein_directory)
-        distance_angle_pair_list=[(0,np.pi/3)]
         os.chdir(protein_directory)
+        #if os.path.exists('BBforbid_d0.2_0504.csv'):
+            #os.rename('BBforbid_d0.2_0504.csv','BBforbid_d0_0504_backup.csv')
+        #if os.path.exists('BBrawRG_easy_0430.csv'):
+        #    print(i)
+        #    continue
+        #else:
+            #sum_all_easy_Template.easy_standard(protein_energy, protein_energy_number, protein_repeat, protein_directory)
+        distance_angle_pair_list=[(1,np.pi/6),(1,np.pi/3)]
         for i in distance_angle_pair_list:
             #entropy_easy_0502_template.cone_entropy(protein_energy, protein_energy_number, protein_repeat,protein_directory,i[0], i[1])
-            #if os.path.exists('BB_entropy_enhanced_easy_'+'d'+str(round(i[0],2))+'_theta'+str(round(i[1],2))+'_0502.csv'):
+            if os.path.exists('BB_entropy_enhanced_easy_'+'d'+str(round(i[0],2))+'_theta'+str(round(i[1],2))+'_0502.csv'):
+                print(i)
+                continue
+            else:
+                entropy_easy_0502_enhanced_sampling_template.enhanced_sampling_surface(protein_energy,protein_energy_number,protein_repeat, protein_directory,i[0], i[1])
+            #if os.path.exists('BBforbid_d'+str(round(i[0],2))+'_0504.csv'):
                 #print(i)
                 #continue
             #else:
-                #entropy_easy_0502_enhanced_sampling_template.enhanced_sampling_surface(protein_energy,protein_energy_number,protein_repeat, protein_directory,i[0], i[1])
-
-            platdist_0504_template.plat_entropy(protein_energy,protein_energy_number,protein_repeat, protein_directory,i[0])
+                #platdist_0504_template.plat_entropy(protein_energy,protein_energy_number,protein_repeat, protein_directory,i[0])
         # Change back to home directory
         os.chdir(home_directory)
 
 if __name__=="__main__":
+    #home_directory='F:\DATA_F\PDBsumreal'
     home_directory='F:\DATA_F\GSlinker_entropic_force'
     os.chdir(home_directory)
     df = pd.read_csv('database_entry.csv')
