@@ -151,4 +151,5 @@ def compute_forbidden_curvature(radius, trajectory, location_of_alpha, number_of
                 k += 1
                 break
         current_frame += 1
-    return prohibited_frames, k
+        ratio = (number_of_frames - k)
+    return prohibited_frames, ratio

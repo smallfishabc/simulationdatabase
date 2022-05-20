@@ -48,7 +48,8 @@ def analyze_easy(home_directory, entrydf):
         #else:
             #sum_all_easy_Template.easy_standard(protein_energy, protein_energy_number, protein_repeat, protein_directory)
         #distance_angle_pair_list=[(1,np.pi/6),(1,np.pi/3)]
-        radius_list=[3,10,20]
+        #radius_list=[1,3,10,20]
+        radius_list=[20]
         #for i in distance_angle_pair_list:
         for i in radius_list:
             #entropy_easy_0502_template.cone_entropy(protein_energy, protein_energy_number, protein_repeat,protein_directory,i[0], i[1])
@@ -71,8 +72,8 @@ def analyze_easy(home_directory, entrydf):
         os.chdir(home_directory)
 
 if __name__=="__main__":
-    #home_directory='F:\DATA_F\PDBsumreal'
-    home_directory='F:\DATA_F\GSlinker_entropic_force'
+    home_directory='F:\DATA_F\PDBsumreal'
+    #home_directory='F:\DATA_F\GSlinker_entropic_force'
     os.chdir(home_directory)
     df = pd.read_csv('database_entry.csv')
     analyze_easy(home_directory,df)
