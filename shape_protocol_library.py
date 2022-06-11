@@ -116,6 +116,7 @@ def compute_forbiden_rotation_enhanced(distance,angle,trajectory,location_of_alp
 # Compute how many possible conformations is prohibitted by constraint surface (Using curvature to simulate the membrane)
 # Here we define curvature using the radius. We draw a sphere as the constraint surface.
 # The C center of the sphere is along the same line as vector a1a2. The distance between a1 and C is the radius of the sphere
+from datetime import datetime
 def compute_forbidden_curvature(radius, trajectory, location_of_alpha, number_of_frames):
     # We can move the following part outside this function for better debugging
     # efficiency in the Jupyter notebook
@@ -125,16 +126,19 @@ def compute_forbidden_curvature(radius, trajectory, location_of_alpha, number_of
     prohibited_frames = []
     prohibited_test = []
     # Here, we defined the radius as the distance between the C center of the sphere and the first alpha carbon.
+    #print(f'start {datetime.now().time()}')
     while current_frame < number_of_frames:
         # The xyz coordinate of the first and the second alpha carbon
         # Make a1 as the origin of the coordinate system
         objectframe = trajectory.xyz[current_frame, :, :]
         # Shift the object to make a1 as the origin
+        #print(f'step1 {datetime.now().time()}')
         object_shifted = el.change_origin(objectframe, objectframe[location_of_alpha[0], :])
         a1a2 = objectframe[location_of_alpha[1], :] - objectframe[location_of_alpha[0], :]
-        # First alpha-carbon is our starting point
+        #print(f'step2 {datetime.now().time()}')
+        # First alpha-carbon is our sprint(datetime.now().time())tarting point
         # The second alpha-carbon determine our standard vector and then we get a unit vector.
-        standard_v_unit_vector = a1a2 / el.maginitude(a1a2)
+        standard_v_unit_vector = a1a2 / np.linalg.norm(a1a2)
         # Calculate the location of the center of the sphere
         c = -1 * radius * standard_v_unit_vector
         # Here we only consider that every alpha carbon should locate outside the sphere.
@@ -143,13 +147,17 @@ def compute_forbidden_curvature(radius, trajectory, location_of_alpha, number_of
         for index, i in enumerate(location_of_alpha[2:]):
             ak = object_shifted[i, :]
             dist_ak_c = np.linalg.norm(ak - c)
+            #print(f'step3 {datetime.now().time()}')
             if dist_ak_c <= radius:
                 # Here we start from a3 (index=0). a1 in the vmd is residue 2 so a3 is residue 4. So we plus 4 here
                 # For VMD debugging only
                 # prohibited_frames.append([current_frame, index + 4])
                 prohibited_frames.append(current_frame)
+                #print(f'step4 {datetime.now().time()}')
                 k += 1
                 break
+        #print(f'Last step {datetime.now().time()}')
         current_frame += 1
         ratio = (number_of_frames - k)
+    #print(f'end {datetime.now().time()}')
     return prohibited_frames, ratio

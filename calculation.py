@@ -47,27 +47,35 @@ def analyze_easy(home_directory, entrydf):
         #    continue
         #else:
             #sum_all_easy_Template.easy_standard(protein_energy, protein_energy_number, protein_repeat, protein_directory)
-        #distance_angle_pair_list=[(1,np.pi/6),(1,np.pi/3)]
+        #distance_angle_pair_list=[(0,np.pi/6),(0.2,np.pi/6),(0.5,np.pi/6),(1,np.pi/6)]
         #radius_list=[1,3,10,20]
-        radius_list=[20]
-        #for i in distance_angle_pair_list:
+        radius_list=[0, 0.2, 0.5, 1, 2]
+        #radius_list = [4 ,5, 6]
+        #radius_list = [7 ,8, 9]
+        #radius_list = [12,14,16,18]
+        #radius_list = [15,20,25,30]
+        #radius_list = [35, 40, 45, 50]
+        #radius_list = [75, 100, 150, 200]
+        # for i in distance_angle_pair_list:
         for i in radius_list:
-            #entropy_easy_0502_template.cone_entropy(protein_energy, protein_energy_number, protein_repeat,protein_directory,i[0], i[1])
-            if os.path.exists('BB_entropy_enhanced_easy_'+'radius'+str(i)+'_0517.csv'):
+
+            if os.path.exists('BB_entropy_easy_'+'radius'+str(i)+'_0517.csv'):
                 print(i)
                 continue
             else:
                 entropy_easy_0517_sphere_template.sphere_entropy(protein_energy,protein_energy_number,protein_repeat, protein_directory,i)
+            # entropy_easy_0502_template.cone_entropy(protein_energy, protein_energy_number, protein_repeat,
+            #                                         protein_directory, i[0], i[1])
             #if os.path.exists('BB_entropy_enhanced_easy_'+'d'+str(round(i[0],2))+'_theta'+str(round(i[1],2))+'_0502.csv'):
                 #print(i)
                 #continue
             #else:
                 #entropy_easy_0502_enhanced_sampling_template.enhanced_sampling_surface(protein_energy,protein_energy_number,protein_repeat, protein_directory,i[0], i[1])
-            #if os.path.exists('BBforbid_d'+str(round(i[0],2))+'_0504.csv'):
-                #print(i)
-                #continue
-            #else:
-                #platdist_0504_template.plat_entropy(protein_energy,protein_energy_number,protein_repeat, protein_directory,i[0])
+            # if os.path.exists('BBforbid_d'+str(round(i[0],2))+'_0504.csv'):
+            #     print(i)
+            #     continue
+            # else:
+            #     platdist_0504_template.plat_entropy(protein_energy,protein_energy_number,protein_repeat, protein_directory,i[0])
         # Change back to home directory
         os.chdir(home_directory)
 

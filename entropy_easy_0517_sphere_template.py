@@ -49,8 +49,8 @@ def sphere_entropy(k,q,repeat,pwd,radius):
         topology=t.topology
         r_alpha=topology.select_atom_indices(selection='alpha')
         prohibited,ratio=spl.compute_forbidden_curvature(radius,t,r_alpha,j)
-        prohibited_df = pd.DataFrame(prohibited)
-        prohibited_df.to_csv('prohibited'+'radius'+str(radius)+'_frame.csv', index=False, sep=',')
+        #prohibited_df = pd.DataFrame(prohibited)
+        #prohibited_df.to_csv('prohibited'+'radius'+str(radius)+'_frame.csv', index=False, sep=',')
         # Record forbidden ratio and frame number
         omega_list.append(ratio/j)
         frametraj.append(j)

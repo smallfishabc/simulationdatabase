@@ -40,7 +40,7 @@ def computeforbiden(distance_d,t,r_alpha,jframes):
                 valuedot=np.dot(standardvector,(a-standard))
                 value=valuedot/np.sqrt(valuea)
             if value<=distance_d:
-                prohibited_frames.append(j,i)
+                prohibited_frames.append(j)
                 k+=1
                 break
         j+=1   
@@ -66,7 +66,6 @@ def plat_entropy(k,q,repeat,pwd,distance_d):
         j = t.n_frames
         topology=t.topology
         r_alpha=topology.select_atom_indices(selection='alpha')
-        print(r_alpha)
         frametraj.append(j)
         #-1 means lower than the platform
         distance_d_adjust=-1*distance_d
