@@ -24,7 +24,7 @@ def read_seq():
     return seq,x
 
 # A protocol function for calculating entropy with a sphere constraint.
-def sphere_entropy(k,q,repeat,pwd,radius):
+def sphere_entropy_reverse(k,q,repeat,pwd,radius):
     os.chdir(pwd)
     print (pwd)
     seq,length=read_seq()
@@ -48,7 +48,7 @@ def sphere_entropy(k,q,repeat,pwd,radius):
         j = r.n_frames
         topology=t.topology
         r_alpha=topology.select_atom_indices(selection='alpha')
-        prohibited,ratio=spl.compute_forbidden_curvature(radius,t,r_alpha,j)
+        prohibited,ratio=spl.compute_forbidden_curvature_reverse(radius,t,r_alpha,j)
         #prohibited_df = pd.DataFrame(prohibited)
         #prohibited_df.to_csv('prohibited'+'radius'+str(radius)+'_frame.csv', index=False, sep=',')
         # Record forbidden ratio and frame number
@@ -68,4 +68,4 @@ if __name__=="__main__":
     #pwd=os.path.dirname(os.path.realpath(__file__))
     pwd ='F:\DATA_F\GSlinker_entropic_force\GS8-summary'
     radius=1
-    sphere_entropy(k,q,repeat,pwd,radius)
+    sphere_entropy_reverse(k,q,repeat,pwd,radius)

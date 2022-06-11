@@ -49,10 +49,11 @@ def analyze_easy(home_directory, entrydf):
             #sum_all_easy_Template.easy_standard(protein_energy, protein_energy_number, protein_repeat, protein_directory)
         #distance_angle_pair_list=[(0,np.pi/6),(0.2,np.pi/6),(0.5,np.pi/6),(1,np.pi/6)]
         #radius_list=[1,3,10,20]
-        radius_list=[0, 0.2, 0.5, 1, 2]
+        #radius_list=[0, 0.2, 0.5, 1, 2]
         #radius_list = [4 ,5, 6]
         #radius_list = [7 ,8, 9]
         #radius_list = [12,14,16,18]
+        radius_list = [11,13,17,19]
         #radius_list = [15,20,25,30]
         #radius_list = [35, 40, 45, 50]
         #radius_list = [75, 100, 150, 200]
