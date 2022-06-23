@@ -81,7 +81,8 @@ def database_plot_pre(datatype,MTFE=0):
 def database_plot_pre_multiple(datatype,MTFE=0,index=8):
     #os.chdir('/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum')
     df_entry = pd.read_csv('database_entry.csv')
-    df = pd.read_csv('database_full_value_1021_iupred.csv')
+    df = pd.read_csv('database_full_value_0428_entropy.csv')
+    #df = pd.read_csv('database_full_value_1021_iupred.csv')
     #df = pd.read_csv('database_full_value_1021_urgent.csv')
     #df = pd.read_csv('database_full_value_1020.csv')
     #df = pd.read_csv('database_full_value_1104_PDBsumreal.csv')
@@ -164,5 +165,39 @@ def interaction_pre_list(index,seq_length,typelist,valueraw1_list,valueraw2_list
         full_data[column_name_rep]=rawrep
     full_data.drop(columns=['a'],inplace=True)
     return full_data
+def database_plot_pre_multiple_none_interaction(datatype,MTFE=0,index=8):
+    #os.chdir('/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum')
+    df_entry = pd.read_csv('database_entry.csv')
+    df = pd.read_csv('database_full_value_0428_entropy.csv')
+    #df = pd.read_csv('database_full_value_1021_iupred.csv')
+    #df = pd.read_csv('database_full_value_1021_urgent.csv')
+    #df = pd.read_csv('database_full_value_1020.csv')
+    #df = pd.read_csv('database_full_value_1104_PDBsumreal.csv')
+    full_df= pd.DataFrame()
+    for i in range(len(df_entry)):
+        protein_name = df_entry.loc[i, 'Protein']
+        sequence = df_entry.loc[i, 'Sequence']
+        seq_length = len(sequence)
+        seq_length_rt=np.sqrt(seq_length)
+        #iupred = df_entry.loc[i,'iupred']
+        # Add the df_protein for selecting sequence feature
+        df_protein = df[df['Protein'] == protein_name]
+        chi_0=chi_value_calculation(df,protein_name, 0,sequence)
+        att_sensitivity=attractive_sensitivity_calculation(df,protein_name,sequence,chi_0,MTFE=3)
+        rep_sensitivity=repulsive_sensitivity_calculation(df, protein_name, sequence, chi_0,MTFE=-3)
+        heli=multiple_selection_function(df, protein_name, 'helix', 0)['Rs'].tolist()[0]
+        HB = multiple_selection_function(df, protein_name, 'HB', 0)['Rs'].tolist()[0]
+        beta = multiple_selection_function(df, protein_name, 'beta', 0)['Rs'].tolist()[0]
+        # Calculate Kappa value
+        #dict_pd={'Protein': protein_name,type+'att':value,type+'rep':value2,'chi_0':chi_0,'att_sensitivity':att_sensitivity,
+        #       'rep_sensitivity':rep_sensitivity,'Helicity':heli,'H-bonds':HB,'delta':delta}
+        dict_pd={'Protein': protein_name,'length':seq_length,'chi_0':chi_0,'att_sensitivity':att_sensitivity,
+               'rep_sensitivity':rep_sensitivity,'Helicity':heli,'H-bonds':HB,'Beta_sheet':beta}
+        new_data = pd.DataFrame(dict_pd,index=[0])
+        full_df = pd.concat([full_df, new_data], ignore_index=True)
+        full_df.to_csv('interaction_strength_fitting_1109.csv',index=False)
+    return full_df
 if __name__ == '__main__':
-    database_plot_pre_multiple('interaction', MTFE=0)
+    directory = 'F:\DATA_F\GSlinker_entropic_force'
+    os.chdir(directory)
+    database_plot_pre_multiple_none_interaction('interaction')
