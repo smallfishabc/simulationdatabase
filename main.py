@@ -11,7 +11,9 @@ if __name__ == '__main__':
     # Set the target directory
     #directory = 'F:\DATA_F\YAP_shahar'
     #directory = 'F:\DATA_F\ADvariants'
-    directory = 'F:\DATA_F\GSlinker_entropic_force'
+    #directory = 'F:\DATA_F\GSlinker_entropic_force'
+    #directory = r'F:\DATA_F\PDB_1009'
+    directory = r'F:\DATA_F\LEA_cesar_renamed_2024'
     #directory = 'F:\DATA_F\Entropic_UGDH'
     #directory = 'F:\DATA_F\LEA_ceasar'
     os.chdir(directory)
