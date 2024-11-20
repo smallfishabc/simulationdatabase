@@ -2,7 +2,6 @@
 import os
 
 import pandas as pd
-import correlationplot
 import Generatedatabase
 import database
 
@@ -13,15 +12,11 @@ if __name__ == '__main__':
     #directory = 'F:\DATA_F\ADvariants'
     #directory = 'F:\DATA_F\GSlinker_entropic_force'
     #directory = r'F:\DATA_F\PDB_1009'
-    directory = r'F:\DATA_F\LEA_cesar_renamed_2024'
+    #directory = r'F:\DATA_F\LEA_cesar_renamed_2024'
     #directory = 'F:\DATA_F\Entropic_UGDH'
     #directory = 'F:\DATA_F\LEA_ceasar'
+    directory = 'F:\DATA_F\Interaction_map_simulation_ACCESS\p53_cancer'
     os.chdir(directory)
-    # Special directory setting for linux system
-    #linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/puma_scramble_new/puma_scrammble_sum'
-    #linux_directory = '/media/lemoncatboy/WD_BLACK/DATA_F/PDBsum'
-    #directory=linux_directory
-    # Print out the directory for testing
     print(directory)
     #print(os.getcwd())
     # Generate a protein entry database containing the subdirectory for each protein
@@ -33,8 +28,6 @@ if __name__ == '__main__':
     #test = database.load_data_easy_entropy(df)
     # Go back to the target directory for saving the csv file
     os.chdir(directory)
-    # Print for test
-    print('a')
     # Save the csv file
-    test.to_csv('database_full_value_0428_entropy.csv',index=False)
+    test.to_csv('database_full_value_1119_interaction.csv',index=False)
 
